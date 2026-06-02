@@ -1,0 +1,106 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f4f7f6;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.module-container {
+    width: 100%;
+    max-width: 1000px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+#login-container {
+    max-width: 400px;
+    padding: 30px;
+    margin-top: 100px;
+}
+
+h2, h3 { color: #2c3e50; margin-bottom: 20px; }
+
+input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-weight: bold;
+    width: 100%;
+    transition: background 0.3s;
+}
+
+button:hover { background-color: #2980b9; }
+
+/* Dashboard Layout */
+header {
+    background: #2c3e50;
+    color: white;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header button { width: auto; background-color: #e74c3c; }
+header button:hover { background-color: #c0392b; }
+
+nav {
+    display: flex;
+    background: #ecf0f1;
+    padding: 10px;
+    gap: 10px;
+    overflow-x: auto;
+}
+
+nav button {
+    background: transparent;
+    color: #333;
+    border: 1px solid #bdc3c7;
+    width: auto;
+}
+
+nav button:hover { background: #bdc3c7; }
+
+main { padding: 30px; }
+
+.card {
+    background: #fff;
+    padding: 20px;
+    border: 1px solid #eee;
+    border-radius: 5px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
+.message {
+    margin-top: 15px;
+    font-weight: bold;
+}
