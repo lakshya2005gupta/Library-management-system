@@ -3,8 +3,6 @@ const API_URL = 'http://localhost:3000/api';
 // --- Login & Logout Logic ---
 document.getElementById('login-form').addEventListener('submit', function(e) {
     e.preventDefault();
-    // In a full production app, this would verify the token with the backend.
-    // For this UI flow, we will bypass to the dashboard upon clicking login.
     document.getElementById('login-container').style.display = 'none';
     document.getElementById('dashboard-container').style.display = 'block';
     showModule('dashboard');
@@ -94,6 +92,7 @@ function showModule(moduleId) {
         content.innerHTML = `
             <div class="card">
                 <h3>System Reports</h3>
+                <button onclick="loadReport('active')" style="width:auto; margin-right: 10px; background: #3498db;">All Active Issues</button>
                 <button onclick="loadReport('overdue')" style="width:auto; margin-right: 10px;">Overdue Books Report</button>
                 <button onclick="loadReport('top-readers')" style="width:auto; background: #27ae60;">Top 5 Readers</button>
                 <div id="reports-container" style="margin-top: 20px;">Select a report to view.</div>
@@ -204,7 +203,10 @@ async function loadReport(type) {
         const data = await res.json();
         let html = '<table border="1" width="100%" style="border-collapse: collapse; text-align: left;">';
         
-        if (type === 'overdue') {
+        if (type === 'active') {
+            html += '<tr><th>Transaction ID</th><th>Student Name</th><th>Book Name</th><th>Issue Date</th></tr>';
+            data.forEach(row => { html += `<tr><td style="font-weight:bold; color:#2980b9;">${row.transaction_id}</td><td>${row.student_name}</td><td>${row.book_name}</td><td>${row.issue_date.split('T')[0]}</td></tr>`; });
+        } else if (type === 'overdue') {
             html += '<tr><th>Student Name</th><th>Book Name</th><th>Issue Date</th><th>Days Borrowed</th></tr>';
             data.forEach(row => { html += `<tr><td>${row.student_name}</td><td>${row.book_name}</td><td>${row.issue_date.split('T')[0]}</td><td style="color:red; font-weight:bold;">${row.days_borrowed}</td></tr>`; });
         } else if (type === 'top-readers') {
@@ -214,56 +216,4 @@ async function loadReport(type) {
         html += '</table>';
         document.getElementById('reports-container').innerHTML = html;
     } catch (err) { console.error(err); }
-}
-
-// --- API Calls to Backend ---
-async function handleIssue(e) {
-    e.preventDefault();
-    const data = {
-        student_id: document.getElementById('student_id').value,
-        book_id: document.getElementById('book_id').value,
-        issue_date: document.getElementById('issue_date').value
-    };
-    
-    try {
-        const res = await fetch(`${API_URL}/issue`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-        });
-        const result = await res.json();
-        const msgEl = document.getElementById('issue-msg');
-        msgEl.innerText = result.message || result.error;
-        msgEl.style.color = result.error ? 'red' : 'green';
-    } catch (err) {
-        console.error("API Error:", err);
-    }
-}
-
-async function handleReturn(e) {
-    e.preventDefault();
-    const data = {
-        issue_id: document.getElementById('issue_id').value,
-        return_date: document.getElementById('return_date').value
-    };
-    
-    try {
-        const res = await fetch(`${API_URL}/return`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-        });
-        const result = await res.json();
-        const msgEl = document.getElementById('return-msg');
-        
-        if (result.error) {
-            msgEl.innerText = result.error;
-            msgEl.style.color = 'red';
-        } else {
-            msgEl.innerText = `${result.message}! Days Delayed: ${result.days_delayed} | Fine: ₹${result.fine_calculated}`;
-            msgEl.style.color = 'green';
-        }
-    } catch (err) {
-        console.error("API Error:", err);
-    }
 }

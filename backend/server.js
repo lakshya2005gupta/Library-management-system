@@ -192,6 +192,22 @@ app.get('/api/reports/overdue', async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 });
+// Active Issues Report (To find Transaction IDs)
+app.get('/api/reports/active', async (req, res) => {
+    try {
+        const query = `
+            SELECT ib.id as transaction_id, s.student_name, b.book_name, ib.issue_date
+            FROM issued_books ib
+            JOIN students s ON ib.student_id = s.id
+            JOIN books b ON ib.book_id = b.id
+            WHERE ib.status = 'Issued'
+        `;
+        const [active] = await db.query(query);
+        res.json(active);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
 
 // Bonus: Top 5 Readers List
 app.get('/api/reports/top-readers', async (req, res) => {
